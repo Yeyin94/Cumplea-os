@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>¡Olivia cumple 1 año! ☀️ Mi primera vuelta al sol</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fredoka:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            sunPalette: {
+              softYellow: '#F9D84E',
+              lightOrange: '#FF9D60',
+              softRed: '#F7819A',
+              verySoftPink: '#FEB7C9',
+              deepMagenta: '#B8005A',
+              textDark: '#4A1224',
+              creamBg: '#FFF6F8'
+            }
+          },
+          fontFamily: {
+            title: ['Caveat', 'cursive'],
+            display: ['Fredoka', 'sans-serif'],
+            body: ['Outfit', 'sans-serif']
+          },
+          animation: {
+            'spin-sun': 'spinSun 22s linear infinite',
+            'float': 'float 3.5s ease-in-out infinite',
+            'pulse-subtle': 'pulseSubtle 2s ease-in-out infinite',
+            'bounce-soft': 'bounceSoft 2s infinite',
+          },
+          keyframes: {
+            spinSun: {
+              '0%': { transform: 'rotate(0deg)' },
+              '100%': { transform: 'rotate(360deg)' }
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-8px)' },
+            },
+            pulseSubtle: {
+              '0%, 100%': { transform: 'scale(1)' },
+              '50%': { transform: 'scale(1.06)' },
+            },
+            bounceSoft: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-6px)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #FFF6F8;
+      color: #4A1224;
+      font-family: 'Outfit', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Estilos del Sobre Interactivo estilo Voga Studios */
+    .envelope-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #FFF6F8;
+      background-image: radial-gradient(#F7819A 0.6px, transparent 0.6px), radial-gradient(#F9D84E 0.6px, #FFF6F8 0.6px);
+      background-size: 24px 24px;
+      transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
+      cursor: pointer;
+    }
+
+    /* Solapa Izquierda (Very Soft Pink #FEB7C9) */
+    .flap-left {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #FFF0F4 0%, #FEB7C9 100%);
+      clip-path: polygon(0 0, 53% 48%, 53% 52%, 0 100%);
+      filter: drop-shadow(6px 0 15px rgba(184, 0, 90, 0.15));
+      transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1);
+      z-index: 10;
+    }
+
+    /* Solapa Derecha (Soft Red #F7819A) */
+    .flap-right {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(225deg, #FEB7C9 0%, #F7819A 100%);
+      clip-path: polygon(100% 0, 47% 48%, 47% 52%, 100% 100%);
+      filter: drop-shadow(-6px 0 18px rgba(184, 0, 90, 0.22));
+      transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1);
+      z-index: 20;
+    }
+
+    /* Animación de apertura de solapas */
+    .envelope-overlay.is-opening .flap-left {
+      transform: translateX(-100%);
+    }
+
+    .envelope-overlay.is-opening .flap-right {
+      transform: translateX(100%);
+    }
+
+    .envelope-overlay.is-opening .envelope-seal-container {
+      transform: translate(-50%, -50%) scale(1.4);
+      opacity: 0;
+    }
+
+    /* Animación de barritas de audio */
+    .music-bar {
+      display: inline-block;
+      width: 3px;
+      height: 12px;
+      background-color: #B8005A;
+      border-radius: 2px;
+      animation: soundBars 1s ease-in-out infinite alternate;
+    }
+
+    .music-bar:nth-child(1) { animation-delay: 0.1s; }
+    .music-bar:nth-child(2) { animation-delay: 0.3s; }
+    .music-bar:nth-child(3) { animation-delay: 0.5s; }
+
+    @keyframes soundBars {
+      0% { height: 4px; }
+      100% { height: 16px; }
+    }
+
+    .paused .music-bar {
+      animation-play-state: paused;
+      height: 4px !important;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(16px);
+      border: 2.5px solid rgba(247, 129, 154, 0.35);
+    }
+  </style>
+</head>
+<body class="min-h-screen py-6 px-4 sm:px-6 flex flex-col items-center justify-center relative overflow-x-hidden">
+
+  <!-- Reproductor de Audio: Mi Bendición - Juan Luis Guerra -->
+  <audio id="bg-music" loop preload="auto">
+    <source src="https://ia801503.us.archive.org/15/items/juan-luis-guerra-mi-bendicion/Juan%20Luis%20Guerra%20-%20Mi%20Bendicion.mp3" type="audio/mpeg">
+    <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lullaby-baby-music-box-113876.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- ========================================================= -->
+  <!-- PORTADA: SOBRE INTERACTIVO ESTILO VOGA (#FEB7C9 Y #F7819A) -->
+  <!-- ========================================================= -->
+  <div id="envelope-overlay" onclick="openEnvelope()" class="envelope-overlay">
+    
+    <!-- Solapa Izquierda (#FEB7C9) -->
+    <div id="flap-left" class="flap-left"></div>
+
+    <!-- Solapa Derecha (#F7819A) -->
+    <div id="flap-right" class="flap-right"></div>
+
+    <!-- Sello del Sol Feliz y Texto en el Centro -->
+    <div id="envelope-seal-container" class="envelope-seal-container fixed z-30 flex flex-col items-center justify-center text-center px-4 transition-all duration-700 ease-out pointer-events-none" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
+      
+      <!-- Sello del Sol Feliz con 12 rayos triangulares -->
+      <div class="w-28 h-28 sm:w-36 sm:h-36 rounded-full bg-sunPalette-softYellow border-4 border-white shadow-2xl flex items-center justify-center p-2.5 animate-pulse-subtle">
+        <svg viewBox="0 0 120 120" class="w-full h-full">
+          <!-- 12 Rayos Triangulares Limpios -->
+          <g fill="#F7C232" stroke="#F7C232" stroke-width="2" stroke-linejoin="round">
+            <polygon points="60,4 53,20 67,20" />
+            <polygon points="60,4 53,20 67,20" transform="rotate(30 60 60)" />
+            <polygon points="60,4 53,20 67,20" transform="rotate(60 60 60)" />
+            <polygon points="60,4 53,20 67,20" transform="rotate(90 60 60)" />
+            <polygon points="60,4 53,20 67,20" transform="rotate(120 60 60)" />
+            <polygon points="60,4 53,20 67,20" transform="rotate(150 60 60)" />
+            <polygon points="60,4 53,20 67,20" transform="rotate(180 60 60)" />
+            <polygon points="60,4 53,20 67,20" transform="rotate(210 60 60)" />
+            <polygon points="60,4 53,20 67,20" transform="rotate(240 60 60)" />
+            <polygon points="60,4 53,20 67,20" transform="rotate(270 60 60)" />
+            <polygon points="60,4 53,20 67,20" transform="rotate(300 60 60)" />
+            <polygon points="60,4 53,20 67,20" transform="rotate(330 60 60)" />
+          </g>
+          <!-- Centro del Sol -->
+          <circle cx="60" cy="60" r="37" fill="#F9C835" stroke="#F7B228" stroke-width="1.5"/>
+          <!-- Cachetes Rosados/Cálidos -->
+          <circle cx="44" cy="65" r="6" fill="#FA8B55" opacity="0.85"/>
+          <circle cx="76" cy="65" r="6" fill="#FA8B55" opacity="0.85"/>
+          <!-- Ojitos sonrientes felices ^ ^ (cerrados) -->
+          <path d="M39 56 Q45 48 51 56" fill="none" stroke="#4A1224" stroke-width="3.5" stroke-linecap="round"/>
+          <path d="M69 56 Q75 48 81 56" fill="none" stroke="#4A1224" stroke-width="3.5" stroke-linecap="round"/>
+          <!-- Sonrisa -->
+          <path d="M51 67 Q60 76 69 67" fill="none" stroke="#4A1224" stroke-width="3.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+
+      <!-- Texto del Sobre -->
+      <div class="mt-5 space-y-1.5 flex flex-col items-center">
+        
+        <!-- Nombre personalizado del invitado si viene en URL -->
+        <div id="cover-guest-container" class="hidden mb-1 px-4 py-1.5 rounded-full bg-white/90 border border-sunPalette-verySoftPink shadow-xs">
+          <span class="text-[10px] text-sunPalette-softRed uppercase font-bold tracking-widest inline-block mr-1">Para:</span>
+          <span id="cover-guest-name" class="font-title text-xl font-bold text-sunPalette-deepMagenta"></span>
+        </div>
+
+        <span class="font-display text-xs sm:text-sm font-bold tracking-widest text-sunPalette-deepMagenta uppercase bg-white/95 border-2 border-sunPalette-verySoftPink px-5 py-2 rounded-full shadow-lg inline-block animate-bounce-soft">
+          DALE CLICK PARA INGRESAR
+        </span>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- INVITACIÓN INTERIOR (REVELADA TRAS ABRIR EL SOBRE) -->
+  <!-- ========================================================= -->
+
+  <!-- Botón Flotante de Control de Música -->
+  <div class="fixed top-4 right-4 z-50 flex items-center gap-2">
+    <button id="music-toggle" onclick="toggleMusic()" 
+            class="bg-white/95 border-2 border-sunPalette-softRed/60 text-sunPalette-deepMagenta p-3 rounded-full shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 group">
+      
+      <div id="music-bars" class="flex items-center gap-0.5 paused">
+        <span class="music-bar"></span>
+        <span class="music-bar"></span>
+        <span class="music-bar"></span>
+      </div>
+
+      <i id="music-icon" data-lucide="music" class="w-5 h-5 text-sunPalette-deepMagenta"></i>
+      <span id="music-label" class="text-xs font-bold font-display text-sunPalette-textDark hidden sm:inline pr-1">Mi Bendición 🎵</span>
+    </button>
+  </div>
+
+  <!-- Banner Flotante para Activar Música -->
+  <div id="music-banner" onclick="enableAudioAndHideBanner()" class="fixed bottom-4 inset-x-4 max-w-sm mx-auto z-40 bg-sunPalette-deepMagenta text-white px-4 py-3 rounded-2xl shadow-2xl border border-white/30 flex items-center justify-between gap-3 cursor-pointer animate-bounce-soft">
+    <div class="flex items-center gap-2.5">
+      <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center shrink-0">
+        <i data-lucide="volume-2" class="w-4 h-4 text-white"></i>
+      </div>
+      <p class="text-xs font-medium leading-tight">Haz clic para escuchar "Mi Bendición" de Juan Luis Guerra 🎵</p>
+    </div>
+    <button class="text-xs bg-sunPalette-softYellow text-sunPalette-textDark font-bold px-3 py-1.5 rounded-xl shrink-0 shadow-xs">Activar</button>
+  </div>
+
+  <!-- Globos / Destellos Flotantes -->
+  <div class="fixed top-6 left-3 opacity-40 pointer-events-none animate-float">
+    <div class="w-12 h-12 rounded-full bg-sunPalette-softYellow shadow-sm border-2 border-white"></div>
+  </div>
+  <div class="fixed top-16 left-10 opacity-35 pointer-events-none animate-float" style="animation-delay: 1s;">
+    <div class="w-8 h-8 rounded-full bg-sunPalette-lightOrange shadow-sm border-2 border-white"></div>
+  </div>
+  
+  <div class="fixed bottom-10 right-4 opacity-35 pointer-events-none animate-float" style="animation-delay: 1.8s;">
+    <div class="flex gap-1 items-end">
+      <div class="w-9 h-9 rounded-full bg-sunPalette-deepMagenta"></div>
+      <div class="w-7 h-7 rounded-full bg-sunPalette-softRed"></div>
+      <div class="w-6 h-6 rounded-full bg-sunPalette-verySoftPink"></div>
+    </div>
+  </div>
+
+  <!-- Contenedor Principal de la Invitación Interior -->
+  <main class="w-full max-w-lg mx-auto my-auto pt-2">
+
+    <div class="glass-card rounded-[40px] shadow-2xl p-6 sm:p-8 text-center relative overflow-hidden border-2 border-sunPalette-verySoftPink">
+      
+      <!-- Listón de Encabezado Superior -->
+      <div class="w-full flex justify-center -mt-2 mb-3">
+        <div class="bg-sunPalette-verySoftPink/50 px-6 py-1.5 rounded-full border border-sunPalette-softRed/40 flex items-center gap-2 shadow-2xs">
+          <i data-lucide="sparkles" class="w-4 h-4 text-sunPalette-deepMagenta"></i>
+          <span class="text-xs font-bold tracking-wider uppercase text-sunPalette-deepMagenta">Invitación Especial</span>
+          <i data-lucide="sparkles" class="w-4 h-4 text-sunPalette-deepMagenta"></i>
+        </div>
+      </div>
+
+      <!-- Saludo Dinámico Personalizado en el Interior -->
+      <div id="dynamic-greeting" class="hidden mb-6 p-4 rounded-2xl bg-gradient-to-r from-sunPalette-verySoftPink/60 to-sunPalette-softYellow/50 border border-sunPalette-softRed/30">
+        <p class="text-xs uppercase tracking-widest text-sunPalette-deepMagenta font-bold">¡Hola!</p>
+        <h3 id="guest-name" class="text-xl font-display font-bold text-sunPalette-textDark mt-0.5"></h3>
+        <p id="guest-passes" class="text-xs text-sunPalette-textDark/80 mt-1 font-medium bg-white/80 py-1 px-3 rounded-full inline-block shadow-2xs"></p>
+      </div>
+
+      <!-- SECCIÓN DEL SOL Y TEXTOS (Arriba del Sol / Sol / Abajo del Sol) -->
+      <div class="my-5 space-y-3 flex flex-col items-center">
+        
+        <!-- Texto Arriba del Sol -->
+        <div class="px-2">
+          <span class="font-title text-3xl sm:text-4xl text-sunPalette-deepMagenta font-bold block leading-tight">
+            Mi primera vuelta al sol
+          </span>
+          <div class="w-20 h-1.5 bg-gradient-to-r from-sunPalette-softYellow via-sunPalette-lightOrange to-sunPalette-softRed mx-auto rounded-full mt-2"></div>
+        </div>
+
+        <!-- Sol Girando en su Propio Eje -->
+        <div class="relative py-2 flex items-center justify-center">
+          <div class="w-36 h-36 sm:w-44 sm:h-44 animate-spin-sun flex items-center justify-center drop-shadow-md">
+            <svg viewBox="0 0 120 120" class="w-full h-full">
+              <!-- 12 Rayos Triangulares Limpios -->
+              <g fill="#F7C232" stroke="#F7C232" stroke-width="2" stroke-linejoin="round">
+                <polygon points="60,4 53,20 67,20" />
+                <polygon points="60,4 53,20 67,20" transform="rotate(30 60 60)" />
+                <polygon points="60,4 53,20 67,20" transform="rotate(60 60 60)" />
+                <polygon points="60,4 53,20 67,20" transform="rotate(90 60 60)" />
+                <polygon points="60,4 53,20 67,20" transform="rotate(120 60 60)" />
+                <polygon points="60,4 53,20 67,20" transform="rotate(150 60 60)" />
+                <polygon points="60,4 53,20 67,20" transform="rotate(180 60 60)" />
+                <polygon points="60,4 53,20 67,20" transform="rotate(210 60 60)" />
+                <polygon points="60,4 53,20 67,20" transform="rotate(240 60 60)" />
+                <polygon points="60,4 53,20 67,20" transform="rotate(270 60 60)" />
+                <polygon points="60,4 53,20 67,20" transform="rotate(300 60 60)" />
+                <polygon points="60,4 53,20 67,20" transform="rotate(330 60 60)" />
+              </g>
+              <!-- Centro del Sol -->
+              <circle cx="60" cy="60" r="37" fill="#F9C835" stroke="#F7B228" stroke-width="1.5"/>
+              <!-- Cachetes Rosados/Cálidos -->
+              <circle cx="44" cy="65" r="6" fill="#FA8B55" opacity="0.85"/>
+              <circle cx="76" cy="65" r="6" fill="#FA8B55" opacity="0.85"/>
+              <!-- Ojitos sonrientes felices ^ ^ (cerrados) -->
+              <path d="M39 56 Q45 48 51 56" fill="none" stroke="#4A1224" stroke-width="3.5" stroke-linecap="round"/>
+              <path d="M69 56 Q75 48 81 56" fill="none" stroke="#4A1224" stroke-width="3.5" stroke-linecap="round"/>
+              <!-- Sonrisa -->
+              <path d="M51 67 Q60 76 69 67" fill="none" stroke="#4A1224" stroke-width="3.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Texto Abajo del Sol -->
+        <div class="space-y-1">
+          <h1 class="font-title text-5xl sm:text-6xl text-sunPalette-textDark font-bold tracking-wide leading-none">
+            Olivia
+          </h1>
+          <span class="inline-block bg-sunPalette-deepMagenta text-white font-display text-xs font-bold uppercase tracking-widest px-3.5 py-1 rounded-full shadow-xs">
+            ¡Cumple 1 Año!
+          </span>
+        </div>
+
+      </div>
+
+      <!-- Mensaje Emotivo -->
+      <p class="text-sm sm:text-base text-sunPalette-textDark/90 italic font-light px-2 my-5 leading-relaxed">
+        "Hace un año, Olivia llegó para iluminar nuestras vidas. ¡Queremos festejar su primer gran viaje alrededor del sol contigo!"
+      </p>
+
+      <!-- Contador Regresivo -->
+      <div class="my-6 bg-gradient-to-br from-sunPalette-verySoftPink/50 via-sunPalette-softYellow/35 to-sunPalette-softRed/20 p-4 rounded-3xl border-2 border-sunPalette-softRed/30 shadow-inner">
+        <p class="text-xs uppercase tracking-widest font-bold text-sunPalette-deepMagenta mb-3 flex items-center justify-center gap-1.5">
+          <i data-lucide="clock" class="w-4 h-4 text-sunPalette-deepMagenta"></i>
+          Faltan para la fiesta
+        </p>
+        <div class="grid grid-cols-4 gap-2 text-center" id="countdown">
+          <div class="bg-white/95 p-2 sm:p-3 rounded-2xl shadow-2xs border border-sunPalette-verySoftPink">
+            <span id="days" class="block font-display text-xl sm:text-2xl font-bold text-sunPalette-deepMagenta">00</span>
+            <span class="text-[10px] sm:text-xs text-sunPalette-textDark/70 uppercase font-medium">Días</span>
+          </div>
+          <div class="bg-white/95 p-2 sm:p-3 rounded-2xl shadow-2xs border border-sunPalette-verySoftPink">
+            <span id="hours" class="block font-display text-xl sm:text-2xl font-bold text-sunPalette-deepMagenta">00</span>
+            <span class="text-[10px] sm:text-xs text-sunPalette-textDark/70 uppercase font-medium">Horas</span>
+          </div>
+          <div class="bg-white/95 p-2 sm:p-3 rounded-2xl shadow-2xs border border-sunPalette-verySoftPink">
+            <span id="minutes" class="block font-display text-xl sm:text-2xl font-bold text-sunPalette-deepMagenta">00</span>
+            <span class="text-[10px] sm:text-xs text-sunPalette-textDark/70 uppercase font-medium">Min</span>
+          </div>
+          <div class="bg-white/95 p-2 sm:p-3 rounded-2xl shadow-2xs border border-sunPalette-verySoftPink">
+            <span id="seconds" class="block font-display text-xl sm:text-2xl font-bold text-sunPalette-deepMagenta">00</span>
+            <span class="text-[10px] sm:text-xs text-sunPalette-textDark/70 uppercase font-medium">Seg</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarjeta de Detalles del Evento -->
+      <div class="space-y-3.5 text-left my-6">
+
+        <!-- Fecha -->
+        <div class="flex items-center gap-4 p-3.5 rounded-2xl bg-white/90 border border-sunPalette-verySoftPink shadow-2xs">
+          <div class="w-12 h-12 rounded-xl bg-sunPalette-softYellow/50 flex items-center justify-center shrink-0 text-sunPalette-deepMagenta">
+            <i data-lucide="calendar" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <span class="text-xs text-sunPalette-deepMagenta uppercase font-bold tracking-wider">Fecha</span>
+            <p class="font-display font-semibold text-sunPalette-textDark text-base sm:text-lg">Domingo, 30 de agosto</p>
+          </div>
+        </div>
+
+        <!-- Hora -->
+        <div class="flex items-center gap-4 p-3.5 rounded-2xl bg-white/90 border border-sunPalette-verySoftPink shadow-2xs">
+          <div class="w-12 h-12 rounded-xl bg-sunPalette-lightOrange/40 flex items-center justify-center shrink-0 text-sunPalette-deepMagenta">
+            <i data-lucide="alarm-clock" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <span class="text-xs text-sunPalette-deepMagenta uppercase font-bold tracking-wider">Hora de Recepción</span>
+            <p class="font-display font-semibold text-sunPalette-textDark text-base sm:text-lg">09:45 AM</p>
+          </div>
+        </div>
+
+        <!-- Recepción / Ubicación -->
+        <div class="p-4 rounded-2xl bg-white/90 border border-sunPalette-verySoftPink shadow-2xs space-y-3">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-sunPalette-softRed/35 flex items-center justify-center shrink-0 text-sunPalette-deepMagenta">
+              <i data-lucide="map-pin" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <span class="text-xs text-sunPalette-deepMagenta uppercase font-bold tracking-wider">Lugar de Recepción</span>
+              <p class="font-display font-semibold text-sunPalette-textDark text-base sm:text-lg">El Portal</p>
+            </div>
+          </div>
+          
+          <!-- Botones de Acción Ubicación -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+            <a href="https://maps.app.goo.gl/UwxcFJxbjNtPtCA1A?g_st=ic" target="_blank" rel="noopener noreferrer" 
+               class="flex items-center justify-center gap-2 bg-sunPalette-deepMagenta hover:bg-pink-800 text-white py-2.5 px-4 rounded-xl font-medium text-xs sm:text-sm transition-all shadow-md hover:shadow-lg active:scale-95">
+              <i data-lucide="map" class="w-4 h-4"></i>
+              Ver en Google Maps
+            </a>
+            <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Cumplea%C3%B1os+1+Olivia+%E2%98%80%EF%B8%8F&dates=20260830T134500Z/20260830T180000Z&details=Celebremos+la+primera+vuelta+al+sol+de+Olivia&location=El+Portal" 
+               target="_blank" rel="noopener noreferrer"
+               class="flex items-center justify-center gap-2 bg-sunPalette-creamBg hover:bg-sunPalette-verySoftPink/50 text-sunPalette-textDark border border-sunPalette-softRed/50 py-2.5 px-4 rounded-xl font-medium text-xs sm:text-sm transition-all active:scale-95">
+              <i data-lucide="calendar-plus" class="w-4 h-4 text-sunPalette-deepMagenta"></i>
+              Agendar evento
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Formulario de Confirmación RSVP -->
+      <div id="rsvp-section" class="mt-8 pt-6 border-t-2 border-sunPalette-verySoftPink text-left">
+        <div class="text-center mb-5">
+          <span class="font-title text-3xl text-sunPalette-deepMagenta block">¿Nos acompañas?</span>
+          <h2 class="font-display text-xl font-bold text-sunPalette-textDark">Confirma tu asistencia</h2>
+          <p class="text-xs text-sunPalette-textDark/70 mt-1">Completa el formulario para enviar tu confirmación por WhatsApp</p>
+        </div>
+
+        <form id="rsvp-form" onsubmit="handleRSVP(event)" class="space-y-4">
+          <!-- Nombre -->
+          <div>
+            <label class="block text-xs font-bold text-sunPalette-deepMagenta uppercase mb-1" for="input-nombre">Tu Nombre o Nombre de Familia</label>
+            <div class="relative">
+              <input type="text" id="input-nombre" required placeholder="Ej: Familia Gutiérrez" 
+                     class="w-full px-4 py-3 rounded-xl bg-white border border-sunPalette-verySoftPink focus:border-sunPalette-deepMagenta focus:ring-2 focus:ring-sunPalette-deepMagenta/20 outline-none transition text-sm text-sunPalette-textDark placeholder-sunPalette-textDark/40">
+            </div>
+          </div>
+
+          <!-- Número de personas -->
+          <div>
+            <label class="block text-xs font-bold text-sunPalette-deepMagenta uppercase mb-1" for="input-asistentes">Cantidad de Asistentes</label>
+            <select id="input-asistentes" class="w-full px-4 py-3 rounded-xl bg-white border border-sunPalette-verySoftPink focus:border-sunPalette-deepMagenta focus:ring-2 focus:ring-sunPalette-deepMagenta/20 outline-none transition text-sm text-sunPalette-textDark">
+              <option value="1 persona">1 persona</option>
+              <option value="2 personas" selected>2 personas</option>
+              <option value="3 personas">3 personas</option>
+              <option value="4 personas">4 personas</option>
+              <option value="5+ personas">5 o más personas</option>
+            </select>
+          </div>
+
+          <!-- Estado de Asistencia -->
+          <div>
+            <label class="block text-xs font-bold text-sunPalette-deepMagenta uppercase mb-1">¿Confirmas tu presencia?</label>
+            <div class="grid grid-cols-2 gap-3">
+              <label class="cursor-pointer border border-sunPalette-verySoftPink rounded-xl p-3 flex items-center justify-center gap-2 bg-white has-[:checked]:bg-sunPalette-verySoftPink/35 has-[:checked]:border-sunPalette-deepMagenta transition shadow-2xs">
+                <input type="radio" name="asistencia" value="Sí, con mucho gusto asistiré ☀️" checked class="accent-sunPalette-deepMagenta">
+                <span class="text-xs font-semibold text-sunPalette-textDark">¡Sí asistiré! 🎉</span>
+              </label>
+              <label class="cursor-pointer border border-sunPalette-verySoftPink rounded-xl p-3 flex items-center justify-center gap-2 bg-white has-[:checked]:bg-sunPalette-verySoftPink/35 has-[:checked]:border-sunPalette-deepMagenta transition shadow-2xs">
+                <input type="radio" name="asistencia" value="Lamentablemente no podré asistir 🥺" class="accent-sunPalette-deepMagenta">
+                <span class="text-xs font-semibold text-sunPalette-textDark">No podré asistir</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Mensaje Opcional para Olivia -->
+          <div>
+            <label class="block text-xs font-bold text-sunPalette-deepMagenta uppercase mb-1" for="input-mensaje">Mensaje o Felicitaciones (Opcional)</label>
+            <textarea id="input-mensaje" rows="2" placeholder="Déjale un mensaje lindo a Olivia en su primer añito..." 
+                      class="w-full px-4 py-2.5 rounded-xl bg-white border border-sunPalette-verySoftPink focus:border-sunPalette-deepMagenta focus:ring-2 focus:ring-sunPalette-deepMagenta/20 outline-none transition text-sm text-sunPalette-textDark placeholder-sunPalette-textDark/40 resize-none"></textarea>
+          </div>
+
+          <!-- Botón de Envío -->
+          <button type="submit" 
+                  class="w-full py-3.5 px-6 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-display font-bold text-base flex items-center justify-center gap-2.5 transition-all shadow-lg hover:shadow-xl active:scale-98 animate-pulse-subtle">
+            <i data-lucide="message-circle" class="w-5 h-5"></i>
+            Confirmar por WhatsApp
+          </button>
+        </form>
+      </div>
+
+      <!-- Pie de página -->
+      <div class="mt-8 pt-4 text-center border-t border-sunPalette-verySoftPink">
+        <p class="font-title text-2xl text-sunPalette-deepMagenta">¡Te esperamos para celebrar juntos!</p>
+        <p class="text-[11px] text-sunPalette-textDark/60 mt-1">Con amor, Olivia y sus papás 💛</p>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Modal / Toast de confirmación -->
+  <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-sunPalette-textDark text-white px-6 py-3 rounded-full text-xs sm:text-sm font-medium shadow-2xl opacity-0 pointer-events-none transition-opacity duration-300 flex items-center gap-2 z-50">
+    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+    <span id="toast-message">Redirigiendo a WhatsApp...</span>
+  </div>
+
+  <script>
+    // Inicializar Iconos Lucide
+    lucide.createIcons();
+
+    // Lógica del Reproductor de Música
+    const music = document.getElementById('bg-music');
+    const musicBars = document.getElementById('music-bars');
+    const musicIcon = document.getElementById('music-icon');
+    const musicBanner = document.getElementById('music-banner');
+    let isPlaying = false;
+
+    function toggleMusic() {
+      if (isPlaying) {
+        music.pause();
+        musicBars.classList.add('paused');
+        musicIcon.setAttribute('data-lucide', 'music-2');
+        isPlaying = false;
+      } else {
+        music.play().then(() => {
+          musicBars.classList.remove('paused');
+          musicIcon.setAttribute('data-lucide', 'volume-2');
+          isPlaying = true;
+          if (musicBanner) musicBanner.classList.add('hidden');
+        }).catch(err => {
+          console.log("Audio play blocked by browser policy:", err);
+        });
+      }
+      lucide.createIcons();
+    }
+
+    function enableAudioAndHideBanner() {
+      music.play().then(() => {
+        musicBars.classList.remove('paused');
+        isPlaying = true;
+        musicBanner.classList.add('hidden');
+      }).catch(err => console.log(err));
+    }
+
+    // Lógica para abrir el sobre estilo Voga
+    function openEnvelope() {
+      const overlay = document.getElementById('envelope-overlay');
+
+      overlay.classList.add('is-opening');
+
+      // Lanzar confeti al abrir
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 120,
+          spread: 90,
+          origin: { y: 0.5 },
+          colors: ['#F9D84E', '#FF9D60', '#F7819A', '#FEB7C9', '#B8005A']
+        });
+      }
+
+      // Intentar iniciar la música "Mi Bendición"
+      enableAudioAndHideBanner();
+
+      // Desvanecer sobre tras abrirse
+      setTimeout(() => {
+        overlay.style.opacity = '0';
+        overlay.style.visibility = 'hidden';
+      }, 800);
+    }
+
+    // Parsear parámetros URL (por ejemplo: ?nombre=Zephora+Gutierrez+y+Flia&invitados=2)
+    const urlParams = new URLSearchParams(window.location.search);
+    const guestNameParam = urlParams.get('nombre') || urlParams.get('name');
+    const guestPassesParam = urlParams.get('invitados') || urlParams.get('pases');
+
+    if (guestNameParam) {
+      // Mostrar nombre en el sobre
+      const coverGuestContainer = document.getElementById('cover-guest-container');
+      const coverGuestName = document.getElementById('cover-guest-name');
+      coverGuestContainer.classList.remove('hidden');
+      coverGuestName.textContent = guestNameParam;
+
+      // Mostrar nombre en la invitación interior
+      const greetingDiv = document.getElementById('dynamic-greeting');
+      const nameEl = document.getElementById('guest-name');
+      const passesEl = document.getElementById('guest-passes');
+      const nombreInput = document.getElementById('input-nombre');
+
+      greetingDiv.classList.remove('hidden');
+      nameEl.textContent = guestNameParam;
+      nombreInput.value = guestNameParam;
+
+      if (guestPassesParam) {
+        passesEl.textContent = `🎟️ ${guestPassesParam} ${parseInt(guestPassesParam) === 1 ? 'pase reservado' : 'pases reservados'}`;
+      } else {
+        passesEl.classList.add('hidden');
+      }
+    }
+
+    // Lógica del Conteo Regresivo
+    function getEventDate() {
+      const now = new Date();
+      let year = now.getFullYear();
+      let eventDate = new Date(year, 7, 30, 9, 45, 0); // Mes 7 = Agosto
+      if (now > eventDate && now.getMonth() >= 8) {
+        eventDate = new Date(year + 1, 7, 30, 9, 45, 0);
+      }
+      return eventDate;
+    }
+
+    const targetDate = getEventDate();
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const difference = targetDate.getTime() - now;
+
+      if (difference <= 0) {
+        document.getElementById('days').innerText = "00";
+        document.getElementById('hours').innerText = "00";
+        document.getElementById('minutes').innerText = "00";
+        document.getElementById('seconds').innerText = "00";
+        return;
+      }
+
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+      document.getElementById('days').innerText = String(days).padStart(2, '0');
+      document.getElementById('hours').innerText = String(hours).padStart(2, '0');
+      document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
+      document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
+    }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    // Manejo de RSVP y envío por WhatsApp
+    function handleRSVP(e) {
+      e.preventDefault();
+
+      const nombre = document.getElementById('input-nombre').value.trim();
+      const asistentes = document.getElementById('input-asistentes').value;
+      const asistenciaRadios = document.getElementsByName('asistencia');
+      let asistenciaVal = "Sí, asistiré ☀️";
+      
+      for (const radio of asistenciaRadios) {
+        if (radio.checked) {
+          asistenciaVal = radio.value;
+          break;
+        }
+      }
+
+      const mensajeOpcional = document.getElementById('input-mensaje').value.trim();
+
+      // Construcción del mensaje para WhatsApp
+      let text = `¡Hola! 👋 Vi la invitación de *Olivia: Mi primera vuelta al sol ☀️*\n\n`;
+      text += `👤 *Invitado:* ${nombre}\n`;
+      text += `👥 *Asistentes:* ${asistentes}\n`;
+      text += `📌 *Estado:* ${asistenciaVal}\n`;
+
+      if (mensajeOpcional) {
+        text += `💬 *Mensaje para Olivia:* "${mensajeOpcional}"\n`;
+      }
+
+      text += `\n¡Nos vemos pronto! 🎈`;
+
+      const phoneNumber = "59165761100";
+      const whatsappUrl = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(text)}`;
+
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 95,
+          spread: 80,
+          origin: { y: 0.6 },
+          colors: ['#F9D84E', '#FF9D60', '#F7819A', '#FEB7C9', '#B8005A']
+        });
+      }
+
+      showToast("Redirigiendo a WhatsApp...");
+
+      setTimeout(() => {
+        window.open(whatsappUrl, '_blank');
+      }, 1000);
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-message');
+      toastMsg.textContent = msg;
+      toast.classList.remove('opacity-0', 'pointer-events-none');
+      
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'pointer-events-none');
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
