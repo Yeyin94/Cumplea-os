@@ -56,14 +56,17 @@ h1{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:clamp(2.1rem
 .wa{background:linear-gradient(135deg,#e8478b,#f0652f);color:#fff;box-shadow:0 8px 18px rgba(232,71,139,.35)}
 .map{background:#fff;color:var(--ink);border:1.5px solid var(--pink)}
 .rsvp{font-size:.78rem;margin-top:16px;opacity:.85}
-#music{position:fixed;right:14px;top:calc(14px + env(safe-area-inset-top,0px));z-index:10;width:44px;height:44px;border-radius:50%;background:#fff;border:1.5px solid var(--pink);font-size:1.2rem;text-decoration:none;display:none;place-items:center;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+#music{position:fixed;right:14px;top:calc(14px + env(safe-area-inset-top,0px));z-index:10;width:44px;height:44px;border-radius:50%;background:#fff;border:1.5px solid var(--pink);color:var(--ink);font-size:1.2rem;cursor:pointer;display:none;place-items:center;box-shadow:0 4px 12px rgba(0,0,0,.15)}
 #music.show{display:grid}
 </style>
 </head>
 <body>
 <svg id="bg" viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg>
 <div id="petals" aria-hidden="true"></div>
-<a id="music" href="https://open.spotify.com/search/Karol%20G%20Bby%20Wow" target="_blank" rel="noopener" aria-label="Escuchar Bby Wow de Karol G">♪</a>
+
+<!-- Reproductor de audio y botón de música -->
+<audio id="bg-audio" src="musica.mp3" loop preload="auto"></audio>
+<button id="music" type="button" aria-label="Pausar o reproducir música">♪</button>
 
 <section id="intro">
   <div class="env" id="env" role="button" tabindex="0" aria-label="Abrir invitación">
@@ -111,11 +114,39 @@ document.getElementById('bg').innerHTML='<rect width="400" height="800" fill="#f
 var pe=document.getElementById('petals');
 for(var i=0;i<16;i++){var p=document.createElement('i');p.className='petal';var z=8+Math.random()*10;
 p.style.cssText='left:'+Math.random()*100+'%;width:'+z+'px;height:'+z*1.3+'px;background:'+P[i%6]+';animation-duration:'+(9+Math.random()*9)+'s;animation-delay:-'+Math.random()*12+'s;--dx:'+(Math.random()*120-60)+'px';pe.appendChild(p)}
+
 var env=document.getElementById('env');
-function open(){if(env.classList.contains('open'))return;env.classList.add('open');
-setTimeout(function(){document.getElementById('intro').classList.add('gone')},1000);
-setTimeout(function(){document.getElementById('intro').style.display='none';document.getElementById('inv').classList.add('show');document.getElementById('music').classList.add('show');window.scrollTo(0,0)},1800)}
-env.addEventListener('click',open);env.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' ')open()});
+var audio=document.getElementById('bg-audio');
+var musicBtn=document.getElementById('music');
+
+function open(){
+  if(env.classList.contains('open'))return;
+  env.classList.add('open');
+  audio.play().catch(function(){});
+  setTimeout(function(){document.getElementById('intro').classList.add('gone')},1000);
+  setTimeout(function(){
+    document.getElementById('intro').style.display='none';
+    document.getElementById('inv').classList.add('show');
+    musicBtn.classList.add('show');
+    window.scrollTo(0,0);
+  },1800);
+}
+
+musicBtn.addEventListener('click',function(){
+  if(audio.paused){
+    audio.play();
+    musicBtn.textContent='♪';
+    musicBtn.style.opacity='1';
+  }else{
+    audio.pause();
+    musicBtn.textContent='🔇';
+    musicBtn.style.opacity='.6';
+  }
+});
+
+env.addEventListener('click',open);
+env.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' ')open()});
+
 var T=new Date('2026-10-18T10:00:00-04:00').getTime();
 function tick(){var d=Math.max(0,T-Date.now()),v=[Math.floor(d/864e5),Math.floor(d/36e5)%24,Math.floor(d/6e4)%60,Math.floor(d/1e3)%60];
 ['d','h','m','s'].forEach(function(k,i){document.getElementById(k).textContent=String(v[i]).padStart(2,'0')})}
